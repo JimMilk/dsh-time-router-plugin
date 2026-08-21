@@ -1,0 +1,33 @@
+{
+  "name": "@jim/dsh-time-router-plugin",
+  "version": "0.1.0",
+  "description": "DSH（DeepSeek Harness）插件：智能路由 —— 按自定义时段与供应商×模型优先级自动路由模型请求，含用量/余额/费用展示",
+  "license": "MIT",
+  "keywords": ["dsh", "deepseek-harness", "plugin", "llm-router", "time-slot", "scnet"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JimMilk/dsh-time-router-plugin.git"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": { "default": "./lib/index.js" },
+    "./client": { "default": "./lib/client.js" },
+    "./package.json": "./package.json"
+  },
+  "files": ["lib", "cordis.patch.yml", "README.md", "LICENSE"],
+  "dsh": {
+    "bundle": { "patch": "./cordis.patch.yml" },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-runtime",
+        "@deepseek-ai/dsh-client-ui-slots",
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-settings",
+        "@deepseek-ai/dsh-api-remotes",
+        "@deepseek-ai/dsh-client-connection"
+      ],
+      "platform": "web"
+    }
+  }
+}

@@ -1,0 +1,4 @@
+# dsh-time-router-plugin — 时段×优先级智能路由（原生 LLM 层，无外部网关）
+- insert:
+    - id: time-router
+      name: '@jim/dsh-time-router-plugin'
