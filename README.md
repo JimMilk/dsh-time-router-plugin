@@ -52,6 +52,31 @@ cd <dsh 源码目录>
 node --import tsx/esm --test /路径/dsh-time-router-plugin/tests/*.test.mjs
 ```
 
+## 使用提示
+
+- **「自动选择」仅属于智能路由**：模型选择器里智能路由只提供「自动选择」；
+  若直连选择 scnet / deepseek 官方，需同时选择具体模型（如 `deepseek-v4-flash`）——
+  `auto` 只被路由层接受，直连官方 API 会拒绝。
+- **直连无兜底**：直连 = 单供应商直连，无降级/冷却（那是智能路由的职责）；
+  直连用量同样计入统计（全局采集）。
+- **自动降级**：设置 → 插件配置 → `time-router` → `budget.autoDegrade: true`，
+  阈值 `scnetCreditPercent`（默认 20）；余额（元或 credits）低于阈值时自动跳过
+  scnet 改走官方，余额补充后自动恢复。
+- **数据与隐私**：用量/费用记录在 `$DSH_HOME/time-router/usage-YYYY-MM-DD.jsonl`
+  （0600）；凭据仅存 dsh credentials 域，不落仓库、不入日志；唯一外发 =
+  各供应商官方 API 与官方余额接口。
+- **调试**：`DSH_TIME_ROUTER_DEBUG=1` 时在 `$DSH_HOME/time-router/debug.log`
+  记录路由/门控/失败明细。
+
+## 更新记录
+
+- **0.2.0（2026-08-21）**：M2 —— 近 7 天用量趋势图（堆叠柱状 + 图例）、
+  预算自动降级、一键测试路由、直连用量全局入账（`llm/stream` tap + 外层去重）、
+  usage 记录 `sessionId`、会话页角标/状态卡（图形化）、优先级拖动排序、
+  scnet 余额单位（元/credits）、公开仓库发布（MIT）。
+- **0.1.0（2026-08-21）**：初始发布 —— 时段×优先级路由、降级/冷却/半开恢复、
+  用量记账与峰谷计费、deepseek 官方余额、设置页路由编辑器、会话页角标。
+
 ## 模块
 
 - `lib/routing.js`：时段匹配/重叠校验/路由求值（纯逻辑，零依赖）

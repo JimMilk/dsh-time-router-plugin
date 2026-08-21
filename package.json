@@ -1,6 +1,6 @@
 {
   "name": "@jim/dsh-time-router-plugin",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "DSH（DeepSeek Harness）插件：智能路由 —— 按自定义时段与供应商×模型优先级自动路由模型请求，含用量/余额/费用展示",
   "license": "MIT",
   "keywords": ["dsh", "deepseek-harness", "plugin", "llm-router", "time-slot", "scnet"],
