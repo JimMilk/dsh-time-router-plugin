@@ -147,3 +147,38 @@ test('listModels：只提供单一「自动选择」项（路由由时段表决�
   assert.equal(list[0].id, 'auto')
   assert.equal(list[0].name, '自动选择')
 })
+
+test('预算门控：额度不足跳过 scnet；全部被门控时放行第一优先级', async () => {
+  const st = new StateRegistry()
+  const gate = (e) => e.provider === 'scnet'
+  const adapter = new TimeRouterAdapter({
+    llm: fakeLlm({ scnet: 'ok', official: 'ok' }),
+    getConfig: () => cfg,
+    directory: () => directory,
+    state: st,
+    budgetGate: gate,
+    onUsage: undefined,
+    onFailure: () => {},
+    onRouteChange: () => {},
+  })
+  const calls = []
+  adapter.llm.stream = (o) => { calls.push(o.provider); return fakeLlm({ scnet: 'ok', official: 'ok' }).stream(o) }
+  await collect(adapter.stream({ provider: 'time-router', model: 'A', messages: [] }))
+  assert.deepEqual(calls, ['official']) // scnet 被门控跳过
+  // 全部被门控 → 放行第一优先级（总能用得了）
+  const allGate = () => true
+  const adapter2 = new TimeRouterAdapter({
+    llm: fakeLlm({ scnet: 'ok' }),
+    getConfig: () => cfg,
+    directory: () => directory,
+    state: st,
+    budgetGate: allGate,
+    onUsage: undefined,
+    onFailure: () => {},
+    onRouteChange: () => {},
+  })
+  const calls2 = []
+  adapter2.llm.stream = (o) => { calls2.push(o.provider); return fakeLlm({ scnet: 'ok', official: 'ok' }).stream(o) }
+  await collect(adapter2.stream({ provider: 'time-router', model: 'A', messages: [] }))
+  assert.deepEqual(calls2, ['scnet'])
+})

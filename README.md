@@ -34,6 +34,15 @@ dsh shutdown && dsh start
 - 用量统计覆盖**全部**模型调用：无论走「智能路由」还是直连选择 scnet / deepseek 官方，
   均经 `llm/stream` 全局采集计入同一份用量与费用（探针单独标记，不计入用户费用）。
 
+## M2 增强
+
+- **近 7 天用量趋势图**：设置页按日堆叠柱状（按供应商分色，悬浮显示 Token/费用）。
+- **自动降级**：开启 `budget.autoDegrade` 后，scnet 余额（元或 credits）低于
+  `scnetCreditPercent` 阈值时自动跳过 scnet、改走官方；余额补充后自动恢复。
+- **测试当前路由**：设置页一键对当前时段优先级逐项发起 1-token 探测并显示
+  各入口耗时/结果（`GET /time-router/test`）。
+- usage 记录含 `sessionId`，为会话级用量标注预留。
+
 ## 测试
 
 测试依赖 dsh 源码工作区解析 `@deepseek-ai/*` 包：
